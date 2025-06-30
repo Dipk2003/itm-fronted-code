@@ -1,5 +1,5 @@
 
-                                            //  componetes for ally for Admin Ragistration
+//  componetes for ally for Admin Ragistration
 import {
   Avatar,
   Box,

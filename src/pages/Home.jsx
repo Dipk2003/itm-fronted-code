@@ -46,6 +46,7 @@ import Navbar from "../component/Navbar";
 import Footer from "../component/Footer";
 import { Link } from "react-router-dom";
 import SearchPageDetails from "../component/SearchPageDetails";
+import AboutUs from "./AboutUs";
 
 const Home = () => {
   let [Carousel, setCarousel] = useState(false);
@@ -1437,7 +1438,7 @@ const Home = () => {
             />
           </Box>
         </Flex>
-        {/* -------------------------------Mobile App--------------------------------- */}
+{/* Mobile App*/}
         <Flex
           borderTop="3px solid purple"
           backgroundColor="white"
@@ -1455,7 +1456,7 @@ const Home = () => {
               fontFamily="Arial"
               color="#333"
             >
-              Get IndiaMART App
+              Get IndiaTradeMART App
             </Heading>
             <Text
               p={{ base: "0px 0px 10px 0px", md: "0px 0px 20px 0px" }}

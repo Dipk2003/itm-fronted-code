@@ -10,6 +10,7 @@ import {
 } from "@chakra-ui/react";
 import React from "react";
 import Logo from "../assets/logodark.png";
+import AboutUs from "../pages/AboutUs";
 
 const Footer = () => {
   return (
@@ -38,10 +39,10 @@ const Footer = () => {
             <Text fontWeight={"500"} fontSize={"lg"} mb={1}>
               Company
             </Text>
-            <Link href={"#"}>About Us</Link>
-            <Link href={"#"}>Press</Link>
-            <Link href={"#"}>Careers</Link>
-            <Link href={"#"}>Contact Us</Link>
+            <Link href={"./AboutUs"}>About Us</Link>
+            <Link href={"./Press"}>Press</Link>
+            <Link href={"./Career"}>Careers</Link>
+            <Link href={"./ContactUs"}>Contact Us</Link>
             <Link href={"#"}>Partners</Link>
           </Stack>
           <Stack align={"flex-start"}>
@@ -58,10 +59,10 @@ const Footer = () => {
             <Text fontWeight={"500"} fontSize={"lg"} mb={1}>
               Follow Us
             </Text>
-            <Link href={"#"}>Facebook</Link>
+            <Link href={"https://www.facebook.com/IndianTradeMart/"}>Facebook</Link>
             <Link href={"#"}>Twitter</Link>
             <Link href={"#"}>Dribbble</Link>
-            <Link href={"#"}>Instagram</Link>
+            <Link href={"https://www.instagram.com/indiantrademart?igsh=d2ljNTQyZ2Z5bDN5/"}>Instagram</Link>
             <Link href={"https://www.linkedin.com/company/itm-indiantrademart/"}>LinkedIn</Link>
           </Stack>
         </SimpleGrid>

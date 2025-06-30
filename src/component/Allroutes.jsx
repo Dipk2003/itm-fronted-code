@@ -9,13 +9,23 @@ import Cart from "./Cart";
 import ProductDetails from "./ProductDetails";
 import SearchPageDetails from "./SearchPageDetails";
 import PrivateRoute from "../HOC/PrivateRoute";
+import AboutUs from "../pages/AboutUs";
+import Press from "../pages/Press";
+import ContactUs from "../pages/ContactUs";
+import Career from "../pages/Career"
+
+
 
 const Allroutes = () => {
   return (
     <Routes>
       <Route path="/" element={<Home />} />
+      <Route path="/AboutUS" element={<AboutUs />} />
+      <Route path="/Career" element={<Career />} />
       <Route path="/cart" element={<Cart />} />
       <Route path="/admin" element={<Admin />} />
+      <Route path="/Press" element={<Press />} />
+      <Route path="/ContactUs" element={<ContactUs />} />
       <Route path="/productDetails/:id" element={<ProductDetails />} />
       <Route path="/searchProduct/:query" element={<SearchPageDetails />} />
       <Route

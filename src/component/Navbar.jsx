@@ -309,7 +309,7 @@ let tocken = getItem("userData");
                           fontWeight="500"
                           display="flex"
                         >
-                          <BiMobile fontSize="20px" color="gray" /> Download APP
+                         <BiMobile fontSize="20px" color="gray" /> Download APP
                         </Text>
                       </Box>
                       <hr />
