@@ -87,27 +87,36 @@ export const AuthProvider = ({ children }) => {
     try {
       setLoading(true);
       
-      // Direct login with password (not OTP-based)
+      // Send login request with password - this will send OTP
       const loginResponse = await axios.post('http://localhost:8080/auth/login', {
         emailOrPhone: emailOrPhone,
         password: password,
         adminCode: adminCode // Add admin code for admin login
       });
 
-      const { token: newToken, user: userData } = loginResponse.data;
+      // Backend returns a message about OTP being sent
+      const responseMessage = loginResponse.data;
       
-      // Store token and user data
-      localStorage.setItem('token', newToken);
-      localStorage.setItem('user', JSON.stringify(userData));
-      
-      setToken(newToken);
-      setUser(userData);
-      
-      toast.success('Login successful!');
-      return { success: true, user: userData, redirectTo: getDashboardRoute(userData.role) };
+      if (responseMessage.includes('OTP sent')) {
+        toast.success(responseMessage);
+        return { success: true, message: responseMessage, requiresOTP: true };
+      } else {
+        // If no OTP required, handle direct token response
+        const { token: newToken, user: userData } = loginResponse.data;
+        
+        // Store token and user data
+        localStorage.setItem('token', newToken);
+        localStorage.setItem('user', JSON.stringify(userData));
+        
+        setToken(newToken);
+        setUser(userData);
+        
+        toast.success('Login successful!');
+        return { success: true, user: userData, redirectTo: getDashboardRoute(userData.role) };
+      }
     } catch (error) {
       console.error('Login error:', error);
-      const message = error.response?.data?.message || 'Login failed';
+      const message = error.response?.data || error.response?.data?.message || 'Login failed';
       toast.error(message);
       return { success: false, message };
     } finally {
@@ -249,6 +258,28 @@ export const AuthProvider = ({ children }) => {
       setLoading(false);
     }
   };
+  
+  const registerAdmin = async (adminData) => {
+    try {
+      setLoading(true);
+      const response = await axios.post('http://localhost:8080/auth/admin/register', {
+        ...adminData,
+        name: `${adminData.firstName} ${adminData.lastName}`,
+        role: 'ROLE_ADMIN',
+        userType: 'admin'
+      });
+      
+      toast.success('Admin registration successful! Please verify your account.');
+      return { success: true, message: 'Admin registration successful! Please check your email/phone for verification.' };
+    } catch (error) {
+      console.error('Admin registration error:', error);
+      const message = error.response?.data?.message || 'Admin registration failed';
+      toast.error(message);
+      return { success: false, message };
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const updateUser = (newUserData) => {
     const updatedUser = { ...user, ...newUserData };
@@ -340,6 +371,7 @@ export const AuthProvider = ({ children }) => {
     vendorLogin,
     register,
     registerVendor,
+    registerAdmin,
     logout,
     sendOTP,
     requestOTP,

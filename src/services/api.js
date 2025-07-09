@@ -46,7 +46,10 @@ export const API_ENDPOINTS = {
   AUTH: {
     LOGIN: '/auth/login',
     REGISTER: '/auth/register',
+    VENDOR_REGISTER: '/auth/vendor/register',
+    ADMIN_REGISTER: '/auth/admin/register',
     VERIFY: '/auth/verify',
+    VERIFY_OTP: '/auth/verify-otp',
   },
   
   // Products
@@ -96,6 +99,53 @@ export const API_ENDPOINTS = {
     UPDATE_VENDOR_TYPE: (userId) => `/admin/vendor/${userId}/type`,
   },
   
+  // Separated User Management
+  USERS: {
+    BASE: '/api/users',
+    BY_ID: (id) => `/api/users/${id}`,
+    BY_EMAIL: (email) => `/api/users/email/${email}`,
+    BY_PHONE: (phone) => `/api/users/phone/${phone}`,
+    VERIFIED: '/api/users/verified',
+    UNVERIFIED: '/api/users/unverified',
+    COUNT: '/api/users/count',
+    EXISTS_EMAIL: (email) => `/api/users/exists/email/${email}`,
+    EXISTS_PHONE: (phone) => `/api/users/exists/phone/${phone}`,
+  },
+  
+  VENDORS: {
+    BASE: '/api/vendors',
+    BY_ID: (id) => `/api/vendors/${id}`,
+    BY_EMAIL: (email) => `/api/vendors/email/${email}`,
+    BY_PHONE: (phone) => `/api/vendors/phone/${phone}`,
+    BY_GST: (gst) => `/api/vendors/gst/${gst}`,
+    BY_PAN: (pan) => `/api/vendors/pan/${pan}`,
+    VERIFIED: '/api/vendors/verified',
+    UNVERIFIED: '/api/vendors/unverified',
+    BY_TYPE: (type) => `/api/vendors/type/${type}`,
+    WITH_GST: '/api/vendors/with-gst',
+    WITH_PAN: '/api/vendors/with-pan',
+    COUNT: '/api/vendors/count',
+    EXISTS_EMAIL: (email) => `/api/vendors/exists/email/${email}`,
+    EXISTS_PHONE: (phone) => `/api/vendors/exists/phone/${phone}`,
+  },
+  
+  ADMINS: {
+    BASE: '/api/admins',
+    BY_ID: (id) => `/api/admins/${id}`,
+    BY_EMAIL: (email) => `/api/admins/email/${email}`,
+    BY_PHONE: (phone) => `/api/admins/phone/${phone}`,
+    ACTIVE: '/api/admins/active',
+    INACTIVE: '/api/admins/inactive',
+    VERIFIED: '/api/admins/verified',
+    UNVERIFIED: '/api/admins/unverified',
+    BY_DEPARTMENT: (dept) => `/api/admins/department/${dept}`,
+    COUNT: '/api/admins/count',
+    ACTIVATE: (id) => `/api/admins/${id}/activate`,
+    DEACTIVATE: (id) => `/api/admins/${id}/deactivate`,
+    EXISTS_EMAIL: (email) => `/api/admins/exists/email/${email}`,
+    EXISTS_PHONE: (phone) => `/api/admins/exists/phone/${phone}`,
+  },
+  
   // Tax/PAN Verification
   TAX: {
     VERIFY_PAN: '/tax/verify-pan',
@@ -109,9 +159,12 @@ export const API_ENDPOINTS = {
 export const apiService = {
   // Authentication services
   auth: {
-    login: (emailOrPhone) => apiClient.post(API_ENDPOINTS.AUTH.LOGIN, { emailOrPhone }),
+    login: (emailOrPhone, password, adminCode) => apiClient.post(API_ENDPOINTS.AUTH.LOGIN, { emailOrPhone, password, adminCode }),
     register: (userData) => apiClient.post(API_ENDPOINTS.AUTH.REGISTER, userData),
+    registerVendor: (vendorData) => apiClient.post(API_ENDPOINTS.AUTH.VENDOR_REGISTER, vendorData),
+    registerAdmin: (adminData) => apiClient.post(API_ENDPOINTS.AUTH.ADMIN_REGISTER, adminData),
     verify: (emailOrPhone, otp) => apiClient.post(API_ENDPOINTS.AUTH.VERIFY, { emailOrPhone, otp }),
+    verifyOtp: (emailOrPhone, otp) => apiClient.post(API_ENDPOINTS.AUTH.VERIFY_OTP, { emailOrPhone, otp }),
   },
   
   // Product services
@@ -184,6 +237,61 @@ export const apiService = {
   // Contact services
   contact: {
     sendMessage: (messageData) => apiClient.post(API_ENDPOINTS.CONTACT, messageData),
+  },
+  
+  // Users services
+  users: {
+    getAll: () => apiClient.get(API_ENDPOINTS.USERS.BASE),
+    getById: (id) => apiClient.get(API_ENDPOINTS.USERS.BY_ID(id)),
+    getByEmail: (email) => apiClient.get(API_ENDPOINTS.USERS.BY_EMAIL(email)),
+    getByPhone: (phone) => apiClient.get(API_ENDPOINTS.USERS.BY_PHONE(phone)),
+    getVerified: () => apiClient.get(API_ENDPOINTS.USERS.VERIFIED),
+    getUnverified: () => apiClient.get(API_ENDPOINTS.USERS.UNVERIFIED),
+    getCount: () => apiClient.get(API_ENDPOINTS.USERS.COUNT),
+    existsByEmail: (email) => apiClient.get(API_ENDPOINTS.USERS.EXISTS_EMAIL(email)),
+    existsByPhone: (phone) => apiClient.get(API_ENDPOINTS.USERS.EXISTS_PHONE(phone)),
+    update: (id, userData) => apiClient.put(API_ENDPOINTS.USERS.BY_ID(id), userData),
+    delete: (id) => apiClient.delete(API_ENDPOINTS.USERS.BY_ID(id)),
+  },
+  
+  // Vendors services
+  vendors: {
+    getAll: () => apiClient.get(API_ENDPOINTS.VENDORS.BASE),
+    getById: (id) => apiClient.get(API_ENDPOINTS.VENDORS.BY_ID(id)),
+    getByEmail: (email) => apiClient.get(API_ENDPOINTS.VENDORS.BY_EMAIL(email)),
+    getByPhone: (phone) => apiClient.get(API_ENDPOINTS.VENDORS.BY_PHONE(phone)),
+    getByGst: (gst) => apiClient.get(API_ENDPOINTS.VENDORS.BY_GST(gst)),
+    getByPan: (pan) => apiClient.get(API_ENDPOINTS.VENDORS.BY_PAN(pan)),
+    getVerified: () => apiClient.get(API_ENDPOINTS.VENDORS.VERIFIED),
+    getUnverified: () => apiClient.get(API_ENDPOINTS.VENDORS.UNVERIFIED),
+    getByType: (type) => apiClient.get(API_ENDPOINTS.VENDORS.BY_TYPE(type)),
+    getWithGst: () => apiClient.get(API_ENDPOINTS.VENDORS.WITH_GST),
+    getWithPan: () => apiClient.get(API_ENDPOINTS.VENDORS.WITH_PAN),
+    getCount: () => apiClient.get(API_ENDPOINTS.VENDORS.COUNT),
+    existsByEmail: (email) => apiClient.get(API_ENDPOINTS.VENDORS.EXISTS_EMAIL(email)),
+    existsByPhone: (phone) => apiClient.get(API_ENDPOINTS.VENDORS.EXISTS_PHONE(phone)),
+    update: (id, vendorData) => apiClient.put(API_ENDPOINTS.VENDORS.BY_ID(id), vendorData),
+    delete: (id) => apiClient.delete(API_ENDPOINTS.VENDORS.BY_ID(id)),
+  },
+  
+  // Admins services
+  admins: {
+    getAll: () => apiClient.get(API_ENDPOINTS.ADMINS.BASE),
+    getById: (id) => apiClient.get(API_ENDPOINTS.ADMINS.BY_ID(id)),
+    getByEmail: (email) => apiClient.get(API_ENDPOINTS.ADMINS.BY_EMAIL(email)),
+    getByPhone: (phone) => apiClient.get(API_ENDPOINTS.ADMINS.BY_PHONE(phone)),
+    getActive: () => apiClient.get(API_ENDPOINTS.ADMINS.ACTIVE),
+    getInactive: () => apiClient.get(API_ENDPOINTS.ADMINS.INACTIVE),
+    getVerified: () => apiClient.get(API_ENDPOINTS.ADMINS.VERIFIED),
+    getUnverified: () => apiClient.get(API_ENDPOINTS.ADMINS.UNVERIFIED),
+    getByDepartment: (dept) => apiClient.get(API_ENDPOINTS.ADMINS.BY_DEPARTMENT(dept)),
+    getCount: () => apiClient.get(API_ENDPOINTS.ADMINS.COUNT),
+    activate: (id) => apiClient.patch(API_ENDPOINTS.ADMINS.ACTIVATE(id)),
+    deactivate: (id) => apiClient.patch(API_ENDPOINTS.ADMINS.DEACTIVATE(id)),
+    existsByEmail: (email) => apiClient.get(API_ENDPOINTS.ADMINS.EXISTS_EMAIL(email)),
+    existsByPhone: (phone) => apiClient.get(API_ENDPOINTS.ADMINS.EXISTS_PHONE(phone)),
+    update: (id, adminData) => apiClient.put(API_ENDPOINTS.ADMINS.BY_ID(id), adminData),
+    delete: (id) => apiClient.delete(API_ENDPOINTS.ADMINS.BY_ID(id)),
   },
 };
 

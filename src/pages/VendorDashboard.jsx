@@ -33,7 +33,11 @@ import {
   AlertIcon,
   AlertTitle,
   AlertDescription,
-  SimpleGrid
+  SimpleGrid,
+  Menu,
+  MenuButton,
+  MenuList,
+  MenuItem
 } from '@chakra-ui/react';
 import {
   FiUser,
@@ -45,7 +49,8 @@ import {
   FiPlus,
   FiSettings,
   FiAward,
-  FiBarChart2
+  FiBarChart2,
+  FiLogOut
 } from 'react-icons/fi';
 import { useAuth } from '../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
@@ -55,7 +60,7 @@ import ProductManagement from '../components/vendor/ProductManagement';
 import LeadManagement from '../components/vendor/LeadManagement';
 
 const VendorDashboard = () => {
-  const { user } = useAuth();
+  const { user, logout } = useAuth();
   const taxProfile = null; // Placeholder for tax profile
   const vendorRanking = null; // Placeholder for vendor ranking
   const [dashboardStats, setDashboardStats] = useState(null);
@@ -122,6 +127,27 @@ const VendorDashboard = () => {
     return icons[type] || '🏷️';
   };
 
+  const handleLogout = async () => {
+    try {
+      await logout();
+      toast({
+        title: 'Logged out successfully',
+        status: 'success',
+        duration: 3000,
+        isClosable: true,
+      });
+      navigate('/vendor-auth');
+    } catch (error) {
+      toast({
+        title: 'Logout failed',
+        description: 'Please try again',
+        status: 'error',
+        duration: 3000,
+        isClosable: true,
+      });
+    }
+  };
+
   if (!user) {
     return (
       <Container maxW="container.xl" py={8}>
@@ -163,7 +189,22 @@ const VendorDashboard = () => {
                 >
                   {getVendorTypeIcon('BASIC')} BASIC
                 </Badge>
-                <Avatar size="md" name={user.name || user.email} />
+                <Menu>
+                  <MenuButton as={Button} variant="ghost" leftIcon={<Avatar size="sm" name={user.name || user.email} />}>
+                    {user?.name || user?.email}
+                  </MenuButton>
+                  <MenuList>
+                    <MenuItem icon={<FiUser />}>
+                      Profile Settings
+                    </MenuItem>
+                    <MenuItem icon={<FiSettings />}>
+                      Account Settings
+                    </MenuItem>
+                    <MenuItem icon={<FiLogOut />} onClick={handleLogout} color="red.500">
+                      Logout
+                    </MenuItem>
+                  </MenuList>
+                </Menu>
               </HStack>
             </HStack>
 
